@@ -10,7 +10,7 @@ export default class FaceRecognition extends Component {
     return (
       <>
         <div className="imagecontainer">
-            <img id="outputimage" alt="images00000" src={this.props.imageUrl} style={{width: 500 + "px", height: "auto"}}/>
+            <img id="outputimage" alt="Invalid address" src={this.props.imageUrl} style={{width: 500 + "px", height: "auto"}}/>
             <div className="boxcontainer" style={{ top: topRow, bottom: bottomRow, right: rightCol, left: leftCol }} />
         </div>
       </>

@@ -28,15 +28,16 @@ const Title = styled.div`
 const Button = styled.div`
   text-align: right;
   button {
-    margin-top: 20px;
-  width: 100px;
+  margin-top: 20px;
+  margin-right: 10px;
+  width: 6rem;
   height: 40px;
   background-image: linear-gradient(to right, #3e4c63, #6a88ba, #3e4c63);
   border: 2px solid #111111;
   border-radius: 10px;
   cursor: pointer;
   font-family: "Courier New",monospace;
-  font-size: 20px;
+  font-size: 1rem;
   color: white;
   }
 `; 
