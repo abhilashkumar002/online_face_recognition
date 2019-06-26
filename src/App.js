@@ -1,9 +1,15 @@
 import React from 'react';
 import Particles from 'react-particles-js';
+import Clarifai from 'clarifai';
 import './App.css'
 import Navigation from './component/Navigation/Navigation';
 import InputForm from './component/InputFiled/InputForm';
 import FaceRecognition from './component/Image/Image';
+import SignIn from './component/Singing/SignIn';
+
+const app = new Clarifai.App({
+  apiKey: '7ac6314b53c34d25af019be048acd8f3'
+})
 
 const param = {
   particles: {
@@ -38,25 +44,75 @@ class App extends React.Component {
   constructor(){
     super();
     this.state = {
-      input : ''
+      input : '',
+      imageUrl: '',
+      faceData : '',
+      singedIn : true,
+      invalidUrl: false
     }
+  }
+
+  calculateFacePosition = (data) => {
+    const cdata = data.rawData.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById("outputimage");
+    const width = Number(image.width);
+    const height = Number(image.height);
+    return {
+      leftCol: cdata.left_col * width,
+      rightCol: width - (cdata.right_col * width),
+      topRow: cdata.top_row * height,
+      bottomRow: height -(cdata.bottom_row * height)
+    }
+  }
+
+  signIn = () => {
+    console.log("signin")
+    this.setState({
+      singedIn : false
+    })
+  }
+
+  signOut = () => {
+    this.setState({
+      singedIn : true
+    })
+  }
+
+  setFaceState = (data) =>{
+    console.log(data)
+    this.setState({faceData: data})
   }
 
   onInputChange = event => {
     console.log(event.target.value);
+    this.setState({
+      input: event.target.value
+    })
   }
 
   onFormSubmit = event => {
-    console.log("clickk");
+    this.setState({imageUrl:this.state.input})
+    app.models.predict(
+      Clarifai.FACE_DETECT_MODEL,
+      this.state.input
+      )
+      .then(response => this.setFaceState(this.calculateFacePosition(response)))
+      .catch(err => console.log(err))
   }
 
   render(){
   return (<>
-    <Particles params={param} className="particle" />
+    {/* <Particles params={param} className="particle" /> */}
+    
     <div className="App">
-      <Navigation />
+      <Navigation signOutState={this.signOut}/>
+      { this.state.singedIn
+        ? <SignIn signInState={this.signIn} />
+        :  <div>
       <InputForm onInputChange={this.onInputChange} onFormSubmit={this.onFormSubmit}/>
-      <FaceRecognition />
+      <FaceRecognition box={this.state.faceData} imageUrl={this.state.input}/>
+      </div>
+      }
     </div>
     </>
   );}

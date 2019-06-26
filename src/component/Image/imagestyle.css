@@ -1,5 +1,16 @@
 .imagecontainer {
   margin: auto;
+  width: 500px;
+  position: relative;
+  text-align: center;
   margin-top: 2rem;
+  margin-bottom: 0;
   border: 1px solid black;
+  background-color: cadetblue;
+}
+
+.boxcontainer {
+  position: absolute;
+  box-shadow: 0 0 0 2px chocolate inset;
+  background-color: rgba(255,255,200, 0);
 }

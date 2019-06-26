@@ -8,7 +8,7 @@ export default class Navigation extends Component {
       <Nav>
         <Logo src={icon}/>
         <Title>Face recognition</Title>
-        <Button><button>SignOut</button></Button>
+        <Button><button onClick={this.props.signOutState}>SignOut</button></Button>
       </Nav>
     )
   }

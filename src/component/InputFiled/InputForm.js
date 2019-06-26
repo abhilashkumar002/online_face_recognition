@@ -6,13 +6,20 @@ const theme = {
 };
 
 export default class InputForm extends Component {
+  mousedown = (event) => {
+    document.getElementById("submitbutton").style.transform = "scale(0.95)";
+  }
+  mouseup = event => {
+    document.getElementById("submitbutton").style.transform = "scale(1)";
+    this.props.onFormSubmit();
+  }
   render() {
     return (
       <InputField>
         <Input theme ={theme}>
-          <div>Enter an image link below.</div>
+          <div style={{color:"white", fontSize: 2+"rem",padding: 1+"rem", marginBottom: 1+"rem"}}>Enter an image link below.</div>
           <input id="inputLink" type="text" onChange={this.props.onInputChange}></input>
-          <button onClick={this.props.onFormSubmit}>Analyse</button>
+          <button id="submitbutton" onMouseDown = {this.mousedown} onMouseUp = {this.mouseup}>Analyse</button>
         </Input>        
       </InputField>
     )

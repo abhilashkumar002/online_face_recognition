@@ -42,7 +42,7 @@ const Input = styled.div`
     color: ${props => props.theme.main ? props.theme.main : "white"};
     font-family: "Courier New",monospace;
     &:hover {
-      transform: scale(1.1);
+      background-color: #4e4c73;
     }
     
   }
