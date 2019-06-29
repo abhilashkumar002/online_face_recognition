@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const SingInDiv = styled.div`
+const SingInDiv = styled.form`
   display: grid;
   justify-items: center;
   width: 100%;
@@ -17,12 +17,12 @@ const SingInDiv = styled.div`
     height: 2.5rem;
     border: 2px solid rgb(244,48,77);
     color: white;
-    padding-left: 1rem;
     margin-bottom: 2rem;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     background-color: inherit;
     border-radius: 2rem;
     outline: none;
+    text-align: center;
   }
 
   button {

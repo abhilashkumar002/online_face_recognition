@@ -48,8 +48,35 @@ class App extends React.Component {
       imageUrl: "",
       faceData: "",
       signedStatus: "signedOut",
-      invalidUrl: false
+      user: {
+        id : '',
+        name : '',
+        email : '',
+        entries : 0,
+        joined: ''
+      }
     };
+  }
+
+  componentDidMount(){
+    console.log("did mount")
+     fetch('http://localhost:4444/')
+     .then(response => response.json())
+     .then(data => console.log(data))
+     .catch(err => console.log(err))
+  }
+
+  updateUser = data => {
+    this.setState({
+      user: {
+        id: data.id,
+        name: data.name,
+        email: data.email,
+        entries: data.entries,
+        joined: data.joined
+      }
+    })
+    console.log(this.state)
   }
 
   calculateFacePosition = data => {
@@ -66,20 +93,17 @@ class App extends React.Component {
     };
   };
 
-  changeSignedStatus = e => {
-    console.log(e.target.value);
+  changeSignedStatus = value => {
     this.setState({
-      signedStatus: e.target.value
+      signedStatus: value
     });
   };
 
   setFaceState = data => {
-    console.log(data);
     this.setState({ faceData: data });
   };
 
   onInputChange = event => {
-    console.log(event.target.value);
     this.setState({
       input: event.target.value
     });
@@ -89,7 +113,26 @@ class App extends React.Component {
     this.setState({ imageUrl: this.state.input });
     app.models
       .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
-      .then(response => this.setFaceState(this.calculateFacePosition(response)))
+      .then(response => {
+        fetch('http://localhost:4444/image',{
+          method: 'put',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            id: this.state.user.id
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          this.setState({
+            user:{
+              ...this.state.user,
+              entries: data
+            } 
+          })
+        })
+        this.setFaceState(this.calculateFacePosition(response))
+        console.log(this.state)
+      })
       .catch(err => console.log(err));
   };
 
@@ -102,12 +145,14 @@ class App extends React.Component {
         />
         {(this.state.signedStatus === "signedOut") && (
           <SignIn
+            updateUser={this.updateUser}
             changeSignedStatus={this.changeSignedStatus}
             signedStatus={this.state.signedStatus}
           />
         )}
         {(this.state.signedStatus === "register") && (
           <SignIn
+            updateUser={this.updateUser}
             changeSignedStatus={this.changeSignedStatus}
             signedStatus={this.state.signedStatus}
           />
@@ -117,6 +162,7 @@ class App extends React.Component {
             <InputForm
               onInputChange={this.onInputChange}
               onFormSubmit={this.onFormSubmit}
+              userData = {this.state}
             />
             <FaceRecognition
               box={this.state.faceData}
