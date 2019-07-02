@@ -1,44 +1,40 @@
 import React from "react";
-import Particles from "react-particles-js";
-import Clarifai from "clarifai";
+//import Particles from "react-particles-js";
 import "./App.css";
 import Navigation from "./component/Navigation/Navigation";
 import InputForm from "./component/InputFiled/InputForm";
 import FaceRecognition from "./component/Image/Image";
 import SignIn from "./component/Singing/SignIn";
 
-const app = new Clarifai.App({
-  apiKey: "7ac6314b53c34d25af019be048acd8f3"
-});
 
-const param = {
-  particles: {
-    line_linked: {
-      shadow: {
-        enable: true,
-        color: "#3CA9D1",
-        blur: 1
-      }
-    },
-    number: {
-      value: 100,
-      density: {
-        enable: true,
-        value_area: 800
-      },
-      color: {
-        value: ["#BD10E0", "#B8E986", "#50E3C2", "#FFD300", "#E86363"]
-      },
-      shape: {
-        type: "circle",
-        stroke: {
-          width: 0,
-          color: "#b6b2b2"
-        }
-      }
-    }
-  }
-};
+// const param = {
+//   particles: {
+//     line_linked: {
+//       shadow: {
+//         enable: true,
+//         color: "#3CA9D1",
+//         blur: 1
+//       }
+//     },
+//     number: {
+//       value: 100,
+//       density: {
+//         enable: true,
+//         value_area: 800
+//       },
+//       color: {
+//         value: ["#BD10E0", "#B8E986", "#50E3C2", "#FFD300", "#E86363"]
+//       },
+//       shape: {
+//         type: "circle",
+//         stroke: {
+//           width: 0,
+//           color: "#b6b2b2"
+//         }
+//       }
+//     }
+//   }
+// };
 
 class App extends React.Component {
   constructor() {
@@ -111,8 +107,16 @@ class App extends React.Component {
 
   onFormSubmit = event => {
     this.setState({ imageUrl: this.state.input });
-    app.models
-      .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+    fetch('http://localhost:4444/imageAnalysis',{
+          method: 'post',
+          headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({
+            url: this.state.input
+          })
+        })
+        .then(response => response.json())
+    // app.models
+    //   .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
       .then(response => {
         fetch('http://localhost:4444/image',{
           method: 'put',

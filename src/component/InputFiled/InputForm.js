@@ -18,7 +18,7 @@ export default class InputForm extends Component {
     return (
       <InputField>
         <Input theme ={theme}>
-          <div style={{color:"white", fontSize: 2+"rem",padding: 1+"rem", marginBottom: 1+"rem"}}>
+          <div style={{fontWeight:700,textAlign:'justify',color:"white", fontSize: 2+"rem",padding: 1+"rem", marginBottom: 1+"rem"}}>
             {
               this.props.userData.user.name 
               && `Hello ${this.props.userData.user.name}, your total analysis count is ${this.props.userData.user.entries}. `

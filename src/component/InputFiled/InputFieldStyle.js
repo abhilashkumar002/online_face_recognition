@@ -12,13 +12,13 @@ const Input = styled.div`
   padding: 20px;
   background:
     radial-gradient(circle at 0% 50%, rgba(96, 16, 48, 0) 9px, #613 10px, rgba(96, 16, 48, 0) 11px) 0px 10px,
-    radial-gradient(at 100% 100%,      rgba(96, 16, 48, 0) 9px, #613 10px, rgba(96, 16, 48, 0) 11px),
+    radial-gradient(at 100% 100%, rgba(96, 16, 48, 0) 9px, #613 10px, rgba(96, 16, 48, 0) 11px),
     #2d3d56;
   background-size: 20px 20px;
 
   input {
     height: 38px;
-    width: 400px;
+    width: 50%;
     border: none;
     outline: none;
     font-size: 20px;
@@ -43,8 +43,7 @@ const Input = styled.div`
     font-family: "Courier New",monospace;
     &:hover {
       background-color: #4e4c73;
-    }
-    
+    }  
   }
 `;
 

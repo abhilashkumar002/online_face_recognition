@@ -38,7 +38,6 @@ export default class SignIn extends Component {
   };
 
   signup = e => {
-    console.log(e.target.innerText)
     if (e.target.innerText === "Sign In") {
       fetch("http://localhost:4444/signin", {
         method: "post",
@@ -50,13 +49,14 @@ export default class SignIn extends Component {
       })
         .then(response => response.json())
         .then(data => {
-          if (data) {
+          console.log(data)
+          if(data !== "error loging in") {
             this.props.updateUser(data);
             this.props.changeSignedStatus("signedIn");
           } else {
             alert("Wrong email or password");
           }
-        });
+        })
     } else if (e.target.innerText === "Register") {
       const {
         signInEmail,
@@ -82,8 +82,13 @@ export default class SignIn extends Component {
           .then(response => response.json())
           .then(data => {
             console.log(data);
-            this.props.updateUser(data);
-            this.props.changeSignedStatus("signedIn"); 
+            if(data.id){
+              this.props.updateUser(data);
+              this.props.changeSignedStatus("signedIn"); 
+            }
+            else{
+              alert(data);
+            }
           });
       }
       else{
