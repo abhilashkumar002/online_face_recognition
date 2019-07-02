@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+The app detects if any face is there in the image. Image processing is done through apis provoded by Clarifai.
+
 ## Available Scripts
 
 In the project directory, you can run:
