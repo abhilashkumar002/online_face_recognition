@@ -6,7 +6,6 @@ import InputForm from "./component/InputFiled/InputForm";
 import FaceRecognition from "./component/Image/Image";
 import SignIn from "./component/Singing/SignIn";
 
-
 // const param = {
 //   particles: {
 //     line_linked: {
@@ -45,21 +44,21 @@ class App extends React.Component {
       faceData: "",
       signedStatus: "signedOut",
       user: {
-        id : '',
-        name : '',
-        email : '',
-        entries : 0,
-        joined: ''
+        id: "",
+        name: "",
+        email: "",
+        entries: 0,
+        joined: ""
       }
     };
   }
 
-  componentDidMount(){
-    console.log("did mount")
-     fetch('http://localhost:4444/')
-     .then(response => response.json())
-     .then(data => console.log(data))
-     .catch(err => console.log(err))
+  componentDidMount() {
+    console.log("did mount");
+    fetch("http://localhost:4444/")
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
   }
 
   updateUser = data => {
@@ -71,9 +70,8 @@ class App extends React.Component {
         entries: data.entries,
         joined: data.joined
       }
-    })
-    console.log(this.state)
-  }
+    });
+  };
 
   calculateFacePosition = data => {
     const cdata =
@@ -93,6 +91,20 @@ class App extends React.Component {
     this.setState({
       signedStatus: value
     });
+    if(value === 'signedOut'){
+      this.setState({
+      input: "",
+      imageUrl: "",
+      faceData: "",
+      user: {
+        id: "",
+        name: "",
+        email: "",
+        entries: 0,
+        joined: ""
+      }
+      })
+    }
   };
 
   setFaceState = data => {
@@ -107,35 +119,33 @@ class App extends React.Component {
 
   onFormSubmit = event => {
     this.setState({ imageUrl: this.state.input });
-    fetch('http://localhost:4444/imageAnalysis',{
-          method: 'post',
-          headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({
-            url: this.state.input
-          })
-        })
-        .then(response => response.json())
-    // app.models
-    //   .predict(Clarifai.FACE_DETECT_MODEL, this.state.input)
+    fetch("http://localhost:4444/imageAnalysis", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url: this.state.input
+      })
+    })
+      .then(response => response.json())
       .then(response => {
-        fetch('http://localhost:4444/image',{
-          method: 'put',
-          headers: {'Content-Type':'application/json'},
+        fetch("http://localhost:4444/image", {
+          method: "put",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             id: this.state.user.id
           })
         })
-        .then(response => response.json())
-        .then(data => {
-          this.setState({
-            user:{
-              ...this.state.user,
-              entries: data
-            } 
-          })
-        })
-        this.setFaceState(this.calculateFacePosition(response))
-        console.log(this.state)
+          .then(response => response.json())
+          .then(data => {
+            this.setState({
+              user: {
+                ...this.state.user,
+                entries: data
+              }
+            });
+          });
+        this.setFaceState(this.calculateFacePosition(response));
+        //console.log(this.state);
       })
       .catch(err => console.log(err));
   };
@@ -147,14 +157,14 @@ class App extends React.Component {
           changeSignedStatus={this.changeSignedStatus}
           signedStatus={this.state.signedStatus}
         />
-        {(this.state.signedStatus === "signedOut") && (
+        {this.state.signedStatus === "signedOut" && (
           <SignIn
             updateUser={this.updateUser}
             changeSignedStatus={this.changeSignedStatus}
             signedStatus={this.state.signedStatus}
           />
         )}
-        {(this.state.signedStatus === "register") && (
+        {this.state.signedStatus === "register" && (
           <SignIn
             updateUser={this.updateUser}
             changeSignedStatus={this.changeSignedStatus}
@@ -166,7 +176,7 @@ class App extends React.Component {
             <InputForm
               onInputChange={this.onInputChange}
               onFormSubmit={this.onFormSubmit}
-              userData = {this.state}
+              userData={this.state}
             />
             <FaceRecognition
               box={this.state.faceData}

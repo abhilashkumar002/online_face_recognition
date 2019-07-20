@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { SingInDiv } from "./SigningStyles";
-var regex = require('regex-email');
+var regex = require("regex-email");
 
 export default class SignIn extends Component {
   constructor(props) {
@@ -9,7 +9,8 @@ export default class SignIn extends Component {
       signInEmail: "",
       signInPassword: "",
       confirmPassword: "",
-      signUpName: ""
+      signUpName: "",
+      loading: false
     };
   }
 
@@ -38,7 +39,12 @@ export default class SignIn extends Component {
   };
 
   signup = e => {
+    this.setState({
+      loading: true
+    })
+    console.log(this.state);
     if (e.target.innerText === "Sign In") {
+      //console.log(this.state);
       fetch("http://localhost:4444/signin", {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -49,14 +55,16 @@ export default class SignIn extends Component {
       })
         .then(response => response.json())
         .then(data => {
-          console.log(data)
-          if(data !== "error loging in") {
+          //console.log(data)
+          if (data.id) {
             this.props.updateUser(data);
             this.props.changeSignedStatus("signedIn");
+            this.setState({ loading: false })
           } else {
-            alert("Wrong email or password");
+            alert(data);
+            this.setState({ loading: false })
           }
-        })
+        });
     } else if (e.target.innerText === "Register") {
       const {
         signInEmail,
@@ -64,12 +72,13 @@ export default class SignIn extends Component {
         signUpName,
         confirmPassword
       } = this.state;
-      
-      if(regex.test(signInEmail)
-      && signInPassword !== ''
-      && signUpName !== ''
-      && signInPassword === confirmPassword
-        ) {
+
+      if (
+        regex.test(signInEmail) &&
+        signInPassword !== "" &&
+        signUpName !== "" &&
+        signInPassword === confirmPassword
+      ) {
         fetch("http://localhost:4444/register", {
           method: "post",
           headers: { "Content-Type": "application/json" },
@@ -81,18 +90,19 @@ export default class SignIn extends Component {
         })
           .then(response => response.json())
           .then(data => {
-            console.log(data);
-            if(data.id){
+            //console.log(data);
+            if (data.id) {
               this.props.updateUser(data);
-              this.props.changeSignedStatus("signedIn"); 
-            }
-            else{
+              this.props.changeSignedStatus("signedIn");
+              this.setState({ loading: false })
+            } else {
               alert(data);
+              this.setState({ loading: false })
             }
           });
-      }
-      else{
-        alert('Plese fill the form correctly')
+      } else {
+        alert("Plese fill the form correctly");
+        this.setState({ loading: false })
       }
     }
   };
@@ -133,13 +143,20 @@ export default class SignIn extends Component {
             />
           </>
         )}
-        <button type='submit' onClick={
-          e => {
+        <button
+          type="submit"
+          onClick={e => {
             e.preventDefault();
             this.signup(e);
-          }
-        } >
-          {this.props.signedStatus === "register" ? "Register" : "Sign In"}
+          }}
+        >
+          {this.props.signedStatus === "register"
+            ? this.state.loading
+              ? "Loading..."
+              : "Register"
+            : this.state.loading
+            ? "Loading..."
+            : "Sign In"}
         </button>
       </SingInDiv>
     );
